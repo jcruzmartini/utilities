@@ -2,13 +2,13 @@
 
 case $2 in
 'dev')
-	SSHPARAM="~/.ssh/nat01_jmartini.pem -tt jmartini@nat.dev.hackettexchange.com"
+	SSHPARAM="-i ~/.ssh/nat01_jmartini.pem -tt jmartini@nat.dev.hackettexchange.com"
 	;;
 'beta')
-	SSHPARAM="~/.ssh/mirror_nat01_jmartini.pem -tt jmartini@nat.beta.hackettexchange.com "
+	SSHPARAM="-i ~/.ssh/mirror_nat01_jmartini.pem -tt jmartini@nat.beta.hackettexchange.com "
 	;;
 'mirror')
-	SSHPARAM="~/.ssh/mirror_nat01_jmartini.pem -tt jmartini@nat.mirror.hackettexchange.com"
+	SSHPARAM="-i ~/.ssh/mirror_nat01_jmartini.pem -tt jmartini@nat.mirror.hackettexchange.com"
 	;;
 esac
 echo "$SSHPARAM"
@@ -23,23 +23,32 @@ case $1 in
 'stop')
        	date
        	echo "Stoping topology [$3] in enviroment [$2 ] "
-	ssh -i $SSHPARAM "ssh webadm@supervisor01 "/usr/local/bin/stormctl.sh stop $3""
+	ssh $SSHPARAM "ssh webadm@supervisor01 "/usr/local/bin/stormctl.sh stop $3""
         ;;
 'start')
        	date
        	echo "Starting topology [$3] in enviroment [$2 ] "
-	ssh -i $SSHPARAM "ssh webadm@supervisor01 "/usr/local/bin/stormctl.sh start $3""
+	ssh $SSHPARAM "ssh webadm@supervisor01 "/usr/local/bin/stormctl.sh start $3""
         ;;
-
-'restartall')
+'restartGroup')
        	date
        	echo "Restarting topology group [$3] in enviroment [$2 ] "
-	ssh -i $SSHPARAM "ssh webadm@supervisor01 "/usr/local/bin/stormctl.sh restartgroup $3""
+	ssh $SSHPARAM "ssh webadm@supervisor01 "/usr/local/bin/stormctl.sh restartgroup $3""
         ;;
-
+'stopall')
+       	date
+       	echo "Stoping all topologies in enviroment [$2 ] "
+	ssh $SSHPARAM "ssh webadm@supervisor01 "/usr/local/bin/stormctl.sh stopall""
+        ;;
+'startall')
+       	date
+       	echo "Starting all topologies in enviroment [$2 ] "
+	ssh $SSHPARAM "ssh webadm@supervisor01 "/usr/local/bin/stormctl.sh startall""
+        ;;
 *)
         echo "usage: $0 {logs|stop|start} {dev|beta|mirror|prod} {topology}"
-        echo "usage: $0 restartall {dev|beta|mirror|prod} {topology group}"
+        echo "usage: $0 restartGroup {dev|beta|mirror|prod} {topology group}"
+        echo "usage: $0 {stopall|startall} {dev|beta|mirror|prod}"
         ;;
 
 esac
