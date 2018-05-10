@@ -45,10 +45,16 @@ case $1 in
        	echo "Starting all topologies in enviroment [$2 ] "
 	ssh $SSHPARAM "ssh webadm@supervisor01 "/usr/local/bin/stormctl.sh startall""
         ;;
+'ssh')
+       	date
+       	echo "Multi SSH for enviroment [$2]"
+        multitail.sh $2
+        ;;
 *)
         echo "usage: $0 {logs|stop|start} {dev|beta|mirror|prod} {topology}"
         echo "usage: $0 restartGroup {dev|beta|mirror|prod} {topology group}"
         echo "usage: $0 {stopall|startall} {dev|beta|mirror|prod}"
+        echo "usage: $0 {ssh} {dev|beta|mirror|prod}"
         ;;
 
 esac
